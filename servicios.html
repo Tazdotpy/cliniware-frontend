@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios — Cliniware</title>
+  <link rel="stylesheet" href="css/cliniware.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><h2>Clini<span>ware</span></h2><p>Sistema de Gestión Clínica</p></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebar-user-avatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Cargando...</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Principal</div>
+      <a href="dashboard.html" class="sidebar-link" data-page="dashboard"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span> Dashboard</a>
+      <div class="sidebar-section-title">Gestión</div>
+      <a href="pacientes.html" class="sidebar-link" data-page="pacientes"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span> Pacientes</a>
+      <a href="medicos.html"   class="sidebar-link" data-page="medicos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="9" r="2"/></svg></span> Médicos</a>
+      <a href="citas.html"     class="sidebar-link" data-page="citas"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span> Citas</a>
+      <a href="pagos.html"     class="sidebar-link" data-page="pagos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span> Pagos</a>
+      <a href="servicios.html" class="sidebar-link" data-page="servicios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A1.5 1.5 0 0 0 5.8 21h12.4a1.5 1.5 0 0 0 1.3-2.5L14 9V3"/></svg></span> Servicios</a>
+      <div class="sidebar-section-title admin-only">Administración</div>
+      <a href="usuarios.html"  class="sidebar-link admin-only" data-page="usuarios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></span> Usuarios</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btn-logout"><span><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Servicios</h1>
+        <p>Catálogo de servicios médicos</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-date" id="topbar-date">—</span>
+        <button class="btn btn-primary" onclick="abrirModalCrear()">+ Nuevo Servicio</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="card">
+        <div class="table-toolbar">
+          <div class="search-input">
+            <span class="search-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+            <input type="text" id="search-input" placeholder="Buscar servicio...">
+          </div>
+          <select class="form-control" id="filter-activo" style="width:auto;margin-bottom:0">
+            <option value="">Todos</option>
+            <option value="true">Solo activos</option>
+            <option value="false">Solo inactivos</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre del servicio</th>
+                <th>Descripción</th>
+                <th>Precio base</th>
+                <th>Precio + ITBIS</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-servicios">
+              <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-secondary)">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span id="pagination-info">—</span>
+          <div class="pagination-pages" id="pagination-pages"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal servicio -->
+<div class="modal-overlay" id="modal-servicio">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-servicio-title">Nuevo Servicio</h2>
+      <button class="modal-close" onclick="Modal.close('modal-servicio')"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form novalidate>
+        <input type="hidden" id="servicio-id">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Nombre del servicio <span class="req">*</span></label>
+            <input type="text" class="form-control" id="svc-nombre" required placeholder="Ej: Ultrasonido abdominal">
+          </div>
+          <div class="form-group full">
+            <label>Descripción</label>
+            <textarea class="form-control" id="svc-descripcion" rows="2" placeholder="Descripción del servicio..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Precio base (RD$) <span class="req">*</span></label>
+            <input type="number" class="form-control" id="svc-precio" required min="0" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label>Duración estimada (minutos)</label>
+            <input type="number" class="form-control" id="svc-duracion" min="5" max="480" placeholder="30">
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select class="form-control" id="svc-activo">
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-servicio')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarServicio()">Guardar Servicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal modal-sm">
+    <div class="modal-body">
+      <div class="confirm-body">
+        <div class="confirm-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+        <h3 id="confirm-title">¿Confirmar?</h3>
+        <p id="confirm-message">Esta acción no se puede deshacer.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-confirm')">Cancelar</button>
+      <button class="btn btn-danger" id="btn-confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  initSidebar('servicios');
+
+  let servicios  = [...MockData.servicios];
+  let filtrados  = [...servicios];
+  let currentPage = 1;
+  const perPage  = 8;
+
+  function render() {
+    const tbody = document.getElementById('tbody-servicios');
+    const start = (currentPage - 1) * perPage;
+    const page  = filtrados.slice(start, start + perPage);
+
+    if (filtrados.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A1.5 1.5 0 0 0 5.8 21h12.4a1.5 1.5 0 0 0 1.3-2.5L14 9V3"/></svg></div><h3>No se encontraron servicios</h3></div></td></tr>`;
+      document.getElementById('pagination-info').textContent = 'Sin registros';
+      document.getElementById('pagination-pages').innerHTML  = '';
+      return;
+    }
+
+    tbody.innerHTML = page.map(s => {
+      const conITBIS = Math.round(s.precio_base * 1.18 * 100) / 100;
+      return `
+      <tr>
+        <td>${s.id}</td>
+        <td><span class="fw-600">${s.nombre}</span></td>
+        <td><span class="text-muted">${s.descripcion || '—'}</span></td>
+        <td>${Utils.formatMoney(s.precio_base)}</td>
+        <td>${Utils.formatMoney(conITBIS)}</td>
+        <td>${s.duracion_min} min</td>
+        <td><span class="${s.activo ? 'badge badge-green' : 'badge badge-gray'}">${s.activo ? 'Activo' : 'Inactivo'}</span></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn btn-ghost btn-sm" onclick="editarServicio(${s.id})" title="Editar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3-11 11-4 1z"/><path d="M14 6l3 3"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleServicio(${s.id})" title="${s.activo ? 'Desactivar' : 'Activar'}"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="eliminarServicio(${s.id})" title="Eliminar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    const totalPages = Math.ceil(filtrados.length / perPage);
+    document.getElementById('pagination-info').textContent =
+      `Mostrando ${start + 1}–${Math.min(start + perPage, filtrados.length)} de ${filtrados.length} registros`;
+    const pagesEl = document.getElementById('pagination-pages');
+    pagesEl.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+      btn.textContent = i;
+      btn.onclick = () => { currentPage = i; render(); };
+      pagesEl.appendChild(btn);
+    }
+  }
+
+  function applyFilter() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const a = document.getElementById('filter-activo').value;
+    filtrados = servicios.filter(s => {
+      const matchQ = !q || s.nombre.toLowerCase().includes(q);
+      const matchA = a === '' || String(s.activo) === a;
+      return matchQ && matchA;
+    });
+    currentPage = 1;
+    render();
+  }
+
+  document.getElementById('search-input').addEventListener('input', Utils.debounce(applyFilter));
+  document.getElementById('filter-activo').addEventListener('change', applyFilter);
+
+  function limpiarForm() {
+    document.getElementById('servicio-id').value    = '';
+    document.getElementById('svc-nombre').value     = '';
+    document.getElementById('svc-descripcion').value= '';
+    document.getElementById('svc-precio').value     = '';
+    document.getElementById('svc-duracion').value   = '30';
+    document.getElementById('svc-activo').value     = 'true';
+  }
+
+  function abrirModalCrear() {
+    limpiarForm();
+    document.getElementById('modal-servicio-title').textContent = 'Nuevo Servicio';
+    Modal.open('modal-servicio');
+  }
+
+  function editarServicio(id) {
+    const s = servicios.find(x => x.id === id);
+    if (!s) return;
+    limpiarForm();
+    document.getElementById('modal-servicio-title').textContent = 'Editar Servicio';
+    document.getElementById('servicio-id').value     = s.id;
+    document.getElementById('svc-nombre').value      = s.nombre;
+    document.getElementById('svc-descripcion').value = s.descripcion || '';
+    document.getElementById('svc-precio').value      = s.precio_base;
+    document.getElementById('svc-duracion').value    = s.duracion_min;
+    document.getElementById('svc-activo').value      = String(s.activo);
+    Modal.open('modal-servicio');
+  }
+
+  function guardarServicio() {
+    const nombre = document.getElementById('svc-nombre').value.trim();
+    const precio = parseFloat(document.getElementById('svc-precio').value);
+    if (!nombre || !precio || precio < 0) {
+      Toast.error('Complete el nombre y precio del servicio.');
+      return;
+    }
+    const id = document.getElementById('servicio-id').value;
+    const data = {
+      nombre,
+      descripcion:  document.getElementById('svc-descripcion').value.trim(),
+      precio_base:  precio,
+      duracion_min: parseInt(document.getElementById('svc-duracion').value) || 30,
+      activo:       document.getElementById('svc-activo').value === 'true',
+    };
+    if (id) {
+      const idx = servicios.findIndex(s => s.id === parseInt(id));
+      if (idx > -1) { servicios[idx] = { ...servicios[idx], ...data }; Toast.success('Servicio actualizado.'); }
+    } else {
+      data.id = Math.max(...servicios.map(s => s.id), 0) + 1;
+      servicios.push(data);
+      Toast.success('Servicio creado.');
+    }
+    Modal.close('modal-servicio');
+    applyFilter();
+  }
+
+  function toggleServicio(id) {
+    const s = servicios.find(x => x.id === id);
+    if (!s) return;
+    s.activo = !s.activo;
+    Toast.success(`Servicio ${s.activo ? 'activado' : 'desactivado'}.`);
+    applyFilter();
+  }
+
+  function eliminarServicio(id) {
+    const s = servicios.find(x => x.id === id);
+    if (!s) return;
+    Modal.confirm('¿Eliminar servicio?', `¿Eliminar "${s.nombre}"? Esta acción no se puede deshacer.`, () => {
+      servicios = servicios.filter(x => x.id !== id);
+      Toast.success('Servicio eliminado.');
+      applyFilter();
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

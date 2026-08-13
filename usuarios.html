@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios — Cliniware</title>
+  <link rel="stylesheet" href="css/cliniware.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><h2>Clini<span>ware</span></h2><p>Sistema de Gestión Clínica</p></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebar-user-avatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Cargando...</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Principal</div>
+      <a href="dashboard.html" class="sidebar-link" data-page="dashboard"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span> Dashboard</a>
+      <div class="sidebar-section-title">Gestión</div>
+      <a href="pacientes.html" class="sidebar-link" data-page="pacientes"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span> Pacientes</a>
+      <a href="medicos.html"   class="sidebar-link" data-page="medicos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="9" r="2"/></svg></span> Médicos</a>
+      <a href="citas.html"     class="sidebar-link" data-page="citas"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span> Citas</a>
+      <a href="pagos.html"     class="sidebar-link" data-page="pagos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span> Pagos</a>
+      <a href="servicios.html" class="sidebar-link" data-page="servicios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A1.5 1.5 0 0 0 5.8 21h12.4a1.5 1.5 0 0 0 1.3-2.5L14 9V3"/></svg></span> Servicios</a>
+      <div class="sidebar-section-title admin-only">Administración</div>
+      <a href="usuarios.html"  class="sidebar-link admin-only" data-page="usuarios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></span> Usuarios</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btn-logout"><span><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Usuarios del Sistema</h1>
+        <p>Gestión de acceso y roles</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-date" id="topbar-date">—</span>
+        <button class="btn btn-primary" onclick="abrirModalCrear()">+ Nuevo Usuario</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- Roles info -->
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-icon teal"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-admin">—</div>
+            <div class="stat-label">Administradores</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="9" r="2"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-medico">—</div>
+            <div class="stat-label">Médicos</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><svg class="icon" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 3h6v3H9z"/><path d="M9 11h6M9 15h6"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-recep">—</div>
+            <div class="stat-label">Recepcionistas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-toolbar">
+          <div class="search-input">
+            <span class="search-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+            <input type="text" id="search-input" placeholder="Buscar por nombre o usuario...">
+          </div>
+          <select class="form-control" id="filter-rol" style="width:auto;margin-bottom:0">
+            <option value="">Todos los roles</option>
+            <option value="ADMIN">Administrador</option>
+            <option value="MEDICO">Médico</option>
+            <option value="RECEPCIONISTA">Recepcionista</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-usuarios">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-secondary)">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal usuario -->
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-usuario-title">Nuevo Usuario</h2>
+      <button class="modal-close" onclick="Modal.close('modal-usuario')"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form novalidate>
+        <input type="hidden" id="usuario-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre completo <span class="req">*</span></label>
+            <input type="text" class="form-control" id="usr-nombre" required placeholder="Nombre y apellido">
+          </div>
+          <div class="form-group">
+            <label>Nombre de usuario <span class="req">*</span></label>
+            <input type="text" class="form-control" id="usr-username" required placeholder="usuario123">
+          </div>
+          <div class="form-group">
+            <label>Contraseña <span class="req">*</span></label>
+            <input type="password" class="form-control" id="usr-password" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-group">
+            <label>Rol <span class="req">*</span></label>
+            <select class="form-control" id="usr-rol" required>
+              <option value="">Seleccionar rol...</option>
+              <option value="ADMIN">Administrador</option>
+              <option value="MEDICO">Médico</option>
+              <option value="RECEPCIONISTA">Recepcionista</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select class="form-control" id="usr-activo">
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-usuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarUsuario()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal modal-sm">
+    <div class="modal-body">
+      <div class="confirm-body">
+        <div class="confirm-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+        <h3 id="confirm-title">¿Confirmar?</h3>
+        <p id="confirm-message">Esta acción no se puede deshacer.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-confirm')">Cancelar</button>
+      <button class="btn btn-danger" id="btn-confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  initSidebar('usuarios');
+
+  // Check admin access
+  const currentUser = Auth.getUser();
+  if (currentUser && currentUser.rol !== 'ADMIN') {
+    Toast.error('Acceso denegado. Solo administradores pueden gestionar usuarios.');
+    setTimeout(() => window.location.href = 'dashboard.html', 2000);
+  }
+
+  let usuarios = [
+    { id: 1, nombre: 'Administrador',    username: 'admin',     rol: 'ADMIN',          activo: true },
+    { id: 2, nombre: 'Ana Recepcionista', username: 'recepcion', rol: 'RECEPCIONISTA',  activo: true },
+    { id: 3, nombre: 'Dr. Carlos Pérez', username: 'dr.perez',  rol: 'MEDICO',         activo: true },
+  ];
+  let filtrados = [...usuarios];
+
+  const rolBadges = {
+    ADMIN:          'badge badge-red',
+    MEDICO:         'badge badge-blue',
+    RECEPCIONISTA:  'badge badge-purple',
+  };
+
+  function updateStats() {
+    document.getElementById('cnt-admin').textContent  = usuarios.filter(u => u.rol === 'ADMIN').length;
+    document.getElementById('cnt-medico').textContent = usuarios.filter(u => u.rol === 'MEDICO').length;
+    document.getElementById('cnt-recep').textContent  = usuarios.filter(u => u.rol === 'RECEPCIONISTA').length;
+  }
+
+  function render() {
+    updateStats();
+    const tbody = document.getElementById('tbody-usuarios');
+    if (filtrados.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div><h3>No se encontraron usuarios</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtrados.map(u => `
+      <tr>
+        <td>${u.id}</td>
+        <td><span class="fw-600">${u.nombre}</span></td>
+        <td><code style="background:var(--content-bg);padding:2px 6px;border-radius:4px;font-size:0.8rem">${u.username}</code></td>
+        <td><span class="${rolBadges[u.rol] || 'badge badge-gray'}">${u.rol}</span></td>
+        <td><span class="${u.activo ? 'badge badge-green' : 'badge badge-gray'}">${u.activo ? 'Activo' : 'Inactivo'}</span></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn btn-ghost btn-sm" onclick="editarUsuario(${u.id})" title="Editar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3-11 11-4 1z"/><path d="M14 6l3 3"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleUsuario(${u.id})" title="${u.activo ? 'Desactivar' : 'Activar'}"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="eliminarUsuario(${u.id})" title="Eliminar" ${u.username === 'admin' ? 'disabled' : ''}><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function applyFilter() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const r = document.getElementById('filter-rol').value;
+    filtrados = usuarios.filter(u => {
+      const matchQ = !q || `${u.nombre} ${u.username}`.toLowerCase().includes(q);
+      const matchR = !r || u.rol === r;
+      return matchQ && matchR;
+    });
+    render();
+  }
+
+  document.getElementById('search-input').addEventListener('input', Utils.debounce(applyFilter));
+  document.getElementById('filter-rol').addEventListener('change', applyFilter);
+
+  function limpiarForm() {
+    document.getElementById('usuario-id').value   = '';
+    document.getElementById('usr-nombre').value   = '';
+    document.getElementById('usr-username').value = '';
+    document.getElementById('usr-password').value = '';
+    document.getElementById('usr-rol').value      = '';
+    document.getElementById('usr-activo').value   = 'true';
+  }
+
+  function abrirModalCrear() {
+    limpiarForm();
+    document.getElementById('modal-usuario-title').textContent = 'Nuevo Usuario';
+    Modal.open('modal-usuario');
+  }
+
+  function editarUsuario(id) {
+    const u = usuarios.find(x => x.id === id);
+    if (!u) return;
+    limpiarForm();
+    document.getElementById('modal-usuario-title').textContent = 'Editar Usuario';
+    document.getElementById('usuario-id').value   = u.id;
+    document.getElementById('usr-nombre').value   = u.nombre;
+    document.getElementById('usr-username').value = u.username;
+    document.getElementById('usr-rol').value      = u.rol;
+    document.getElementById('usr-activo').value   = String(u.activo);
+    Modal.open('modal-usuario');
+  }
+
+  function guardarUsuario() {
+    const nombre   = document.getElementById('usr-nombre').value.trim();
+    const username = document.getElementById('usr-username').value.trim();
+    const password = document.getElementById('usr-password').value;
+    const rol      = document.getElementById('usr-rol').value;
+    const id       = document.getElementById('usuario-id').value;
+    if (!nombre || !username || !rol) { Toast.error('Complete todos los campos obligatorios.'); return; }
+    if (!id && password.length < 6)  { Toast.error('La contraseña debe tener al menos 6 caracteres.'); return; }
+    const data = {
+      nombre, username, rol,
+      activo: document.getElementById('usr-activo').value === 'true'
+    };
+    if (id) {
+      const idx = usuarios.findIndex(u => u.id === parseInt(id));
+      if (idx > -1) { usuarios[idx] = { ...usuarios[idx], ...data }; Toast.success('Usuario actualizado.'); }
+    } else {
+      data.id = Math.max(...usuarios.map(u => u.id), 0) + 1;
+      data.password = password;
+      usuarios.push(data);
+      Toast.success('Usuario creado.');
+    }
+    Modal.close('modal-usuario');
+    applyFilter();
+  }
+
+  function toggleUsuario(id) {
+    const u = usuarios.find(x => x.id === id);
+    if (!u) return;
+    u.activo = !u.activo;
+    Toast.success(`Usuario ${u.activo ? 'activado' : 'desactivado'}.`);
+    applyFilter();
+  }
+
+  function eliminarUsuario(id) {
+    const u = usuarios.find(x => x.id === id);
+    if (!u || u.username === 'admin') { Toast.error('No se puede eliminar este usuario.'); return; }
+    Modal.confirm('¿Eliminar usuario?', `¿Eliminar al usuario "${u.username}"?`, () => {
+      usuarios = usuarios.filter(x => x.id !== id);
+      Toast.success('Usuario eliminado.');
+      applyFilter();
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

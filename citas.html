@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citas — Cliniware</title>
+  <link rel="stylesheet" href="css/cliniware.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><h2>Clini<span>ware</span></h2><p>Sistema de Gestión Clínica</p></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebar-user-avatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Cargando...</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Principal</div>
+      <a href="dashboard.html" class="sidebar-link" data-page="dashboard"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span> Dashboard</a>
+      <div class="sidebar-section-title">Gestión</div>
+      <a href="pacientes.html" class="sidebar-link" data-page="pacientes"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span> Pacientes</a>
+      <a href="medicos.html"   class="sidebar-link" data-page="medicos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="9" r="2"/></svg></span> Médicos</a>
+      <a href="citas.html"     class="sidebar-link" data-page="citas"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span> Citas</a>
+      <a href="pagos.html"     class="sidebar-link" data-page="pagos"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span> Pagos</a>
+      <a href="servicios.html" class="sidebar-link" data-page="servicios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A1.5 1.5 0 0 0 5.8 21h12.4a1.5 1.5 0 0 0 1.3-2.5L14 9V3"/></svg></span> Servicios</a>
+      <div class="sidebar-section-title admin-only">Administración</div>
+      <a href="usuarios.html"  class="sidebar-link admin-only" data-page="usuarios"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></span> Usuarios</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btn-logout"><span><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></span> Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Citas</h1>
+        <p>Gestión de agenda y citas médicas</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-date" id="topbar-date">—</span>
+        <button class="btn btn-primary" onclick="abrirModalCrear()">+ Nueva Cita</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- Estado resumen -->
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-icon amber"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-pendiente">—</div>
+            <div class="stat-label">Pendientes</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-confirmada">—</div>
+            <div class="stat-label">Confirmadas</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 3.5L16 11H5"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-completada">—</div>
+            <div class="stat-label">Completadas</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-value" id="cnt-cancelada">—</div>
+            <div class="stat-label">Canceladas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-toolbar">
+          <div class="search-input">
+            <span class="search-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+            <input type="text" id="search-input" placeholder="Buscar por paciente, médico o número de cita...">
+          </div>
+          <select class="form-control" id="filter-estado" style="width:auto;margin-bottom:0">
+            <option value="">Todos los estados</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="CONFIRMADA">Confirmada</option>
+            <option value="COMPLETADA">Completada</option>
+            <option value="CANCELADA">Cancelada</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Nro. Cita</th>
+                <th>Paciente</th>
+                <th>Médico</th>
+                <th>Servicio</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-citas">
+              <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-secondary)">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span id="pagination-info">—</span>
+          <div class="pagination-pages" id="pagination-pages"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cita -->
+<div class="modal-overlay" id="modal-cita">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-cita-title">Nueva Cita</h2>
+      <button class="modal-close" onclick="Modal.close('modal-cita')"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-cita" novalidate>
+        <input type="hidden" id="cita-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Paciente <span class="req">*</span></label>
+            <select class="form-control" id="cit-paciente" required>
+              <option value="">Seleccionar paciente...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Médico <span class="req">*</span></label>
+            <select class="form-control" id="cit-medico" required>
+              <option value="">Seleccionar médico...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha <span class="req">*</span></label>
+            <input type="date" class="form-control" id="cit-fecha" required>
+          </div>
+          <div class="form-group">
+            <label>Hora <span class="req">*</span></label>
+            <input type="time" class="form-control" id="cit-hora" required>
+          </div>
+          <div class="form-group">
+            <label>Servicio</label>
+            <select class="form-control" id="cit-servicio">
+              <option value="">Sin servicio adicional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select class="form-control" id="cit-estado">
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="CONFIRMADA">Confirmada</option>
+              <option value="COMPLETADA">Completada</option>
+              <option value="CANCELADA">Cancelada</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monto (RD$)</label>
+            <input type="number" class="form-control" id="cit-monto" placeholder="0.00" min="0">
+          </div>
+          <div class="form-group full">
+            <label>Motivo de consulta</label>
+            <textarea class="form-control" id="cit-motivo" rows="2" placeholder="Descripción del motivo..."></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-cita')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarCita()">Guardar Cita</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal modal-sm">
+    <div class="modal-body">
+      <div class="confirm-body">
+        <div class="confirm-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+        <h3 id="confirm-title">¿Confirmar?</h3>
+        <p id="confirm-message">Esta acción no se puede deshacer.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Modal.close('modal-confirm')">Cancelar</button>
+      <button class="btn btn-danger" id="btn-confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  initSidebar('citas');
+
+  let citas     = [...MockData.citas];
+  let filtrados = [...citas];
+  let currentPage = 1;
+  const perPage = 8;
+
+  function poblarSelects() {
+    const pacOpts = MockData.pacientes
+      .filter(p => !p.archivado)
+      .map(p => `<option value="${p.nombre} ${p.apellido}">${p.nombre} ${p.apellido}</option>`).join('');
+    const medOpts = MockData.medicos
+      .filter(m => m.activo)
+      .map(m => `<option value="Dr. ${m.nombre} ${m.apellido}">Dr. ${m.nombre} ${m.apellido}</option>`).join('');
+    const svcOpts = MockData.servicios
+      .filter(s => s.activo)
+      .map(s => `<option value="${s.nombre}" data-precio="${s.precio_base}">${s.nombre} — RD$${s.precio_base.toLocaleString()}</option>`).join('');
+
+    document.getElementById('cit-paciente').innerHTML = '<option value="">Seleccionar paciente...</option>' + pacOpts;
+    document.getElementById('cit-medico').innerHTML   = '<option value="">Seleccionar médico...</option>' + medOpts;
+    document.getElementById('cit-servicio').innerHTML = '<option value="">Sin servicio adicional</option>' + svcOpts;
+  }
+
+  // Auto-fill monto when service selected
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'cit-servicio') {
+      const opt = e.target.selectedOptions[0];
+      const precio = opt?.dataset?.precio;
+      if (precio) document.getElementById('cit-monto').value = precio;
+      else document.getElementById('cit-monto').value = '';
+    }
+  });
+
+  function updateStats() {
+    ['PENDIENTE','CONFIRMADA','COMPLETADA','CANCELADA'].forEach(estado => {
+      const el = document.getElementById(`cnt-${estado.toLowerCase()}`);
+      if (el) el.textContent = citas.filter(c => c.estado === estado).length;
+    });
+  }
+
+  function render() {
+    updateStats();
+    const tbody = document.getElementById('tbody-citas');
+    const start = (currentPage - 1) * perPage;
+    const page  = filtrados.slice(start, start + perPage);
+
+    if (filtrados.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="empty-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div><h3>No se encontraron citas</h3></div></td></tr>`;
+      document.getElementById('pagination-info').textContent = 'Sin registros';
+      document.getElementById('pagination-pages').innerHTML = '';
+      return;
+    }
+
+    tbody.innerHTML = page.map(c => `
+      <tr>
+        <td><span class="fw-600 text-teal">${c.numero_cita}</span></td>
+        <td>${c.paciente}</td>
+        <td>${c.medico}</td>
+        <td>${c.servicio || '—'}</td>
+        <td>${Utils.formatDate(c.fecha_cita)}</td>
+        <td>${c.hora_cita}</td>
+        <td>${c.monto ? Utils.formatMoney(c.monto) : '—'}</td>
+        <td><span class="${Utils.getEstadoBadge(c.estado)}">${c.estado}</span></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn btn-ghost btn-sm" onclick="editarCita(${c.id})" title="Editar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3-11 11-4 1z"/><path d="M14 6l3 3"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="cambiarEstado(${c.id})" title="Cambiar estado"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg></button>
+            <button class="btn btn-ghost btn-sm" onclick="eliminarCita(${c.id})" title="Eliminar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    const totalPages = Math.ceil(filtrados.length / perPage);
+    document.getElementById('pagination-info').textContent =
+      `Mostrando ${start + 1}–${Math.min(start + perPage, filtrados.length)} de ${filtrados.length} registros`;
+    const pagesEl = document.getElementById('pagination-pages');
+    pagesEl.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+      btn.textContent = i;
+      btn.onclick = () => { currentPage = i; render(); };
+      pagesEl.appendChild(btn);
+    }
+  }
+
+  function applyFilter() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const e = document.getElementById('filter-estado').value;
+    filtrados = citas.filter(c => {
+      const matchQ = !q || `${c.paciente} ${c.medico} ${c.numero_cita}`.toLowerCase().includes(q);
+      const matchE = !e || c.estado === e;
+      return matchQ && matchE;
+    });
+    currentPage = 1;
+    render();
+  }
+
+  document.getElementById('search-input').addEventListener('input', Utils.debounce(applyFilter));
+  document.getElementById('filter-estado').addEventListener('change', applyFilter);
+
+  function limpiarForm() {
+    document.getElementById('cita-id').value  = '';
+    document.getElementById('cit-paciente').value = '';
+    document.getElementById('cit-medico').value   = '';
+    document.getElementById('cit-fecha').value    = new Date().toISOString().split('T')[0];
+    document.getElementById('cit-hora').value     = '08:00';
+    document.getElementById('cit-servicio').value = '';
+    document.getElementById('cit-estado').value   = 'PENDIENTE';
+    document.getElementById('cit-monto').value    = '';
+    document.getElementById('cit-motivo').value   = '';
+  }
+
+  function abrirModalCrear() {
+    limpiarForm();
+    document.getElementById('modal-cita-title').textContent = 'Nueva Cita';
+    Modal.open('modal-cita');
+  }
+
+  function editarCita(id) {
+    const c = citas.find(x => x.id === id);
+    if (!c) return;
+    limpiarForm();
+    document.getElementById('modal-cita-title').textContent = 'Editar Cita';
+    document.getElementById('cita-id').value      = c.id;
+    document.getElementById('cit-paciente').value = c.paciente;
+    document.getElementById('cit-medico').value   = c.medico;
+    document.getElementById('cit-fecha').value    = c.fecha_cita;
+    document.getElementById('cit-hora').value     = c.hora_cita;
+    document.getElementById('cit-servicio').value = c.servicio || '';
+    document.getElementById('cit-estado').value   = c.estado;
+    document.getElementById('cit-monto').value    = c.monto || '';
+    Modal.open('modal-cita');
+  }
+
+  function guardarCita() {
+    const paciente  = document.getElementById('cit-paciente').value;
+    const medico    = document.getElementById('cit-medico').value;
+    const fecha     = document.getElementById('cit-fecha').value;
+    const hora      = document.getElementById('cit-hora').value;
+    if (!paciente || !medico || !fecha || !hora) {
+      Toast.error('Complete paciente, médico, fecha y hora.');
+      return;
+    }
+    const id = document.getElementById('cita-id').value;
+    const data = {
+      paciente, medico, fecha_cita: fecha, hora_cita: hora,
+      servicio: document.getElementById('cit-servicio').value || null,
+      estado:   document.getElementById('cit-estado').value,
+      monto:    parseFloat(document.getElementById('cit-monto').value) || 0,
+    };
+    if (id) {
+      const idx = citas.findIndex(c => c.id === parseInt(id));
+      if (idx > -1) { citas[idx] = { ...citas[idx], ...data }; Toast.success('Cita actualizada.'); }
+    } else {
+      data.id = Math.max(...citas.map(c => c.id), 0) + 1;
+      data.numero_cita = `CIT-${String(data.id).padStart(4,'0')}`;
+      citas.push(data);
+      Toast.success('Cita registrada.');
+    }
+    Modal.close('modal-cita');
+    applyFilter();
+  }
+
+  function cambiarEstado(id) {
+    const c = citas.find(x => x.id === id);
+    if (!c) return;
+    const estados = ['PENDIENTE','CONFIRMADA','COMPLETADA','CANCELADA'];
+    const actual  = estados.indexOf(c.estado);
+    const siguiente = estados[(actual + 1) % estados.length];
+    Modal.confirm('Cambiar estado', `¿Cambiar estado de ${c.numero_cita} de "${c.estado}" a "${siguiente}"?`, () => {
+      c.estado = siguiente;
+      Toast.success(`Estado actualizado a ${siguiente}.`);
+      applyFilter();
+    });
+  }
+
+  function eliminarCita(id) {
+    const c = citas.find(x => x.id === id);
+    if (!c) return;
+    Modal.confirm('¿Eliminar cita?', `¿Eliminar la cita ${c.numero_cita}? Esta acción no se puede deshacer.`, () => {
+      citas = citas.filter(x => x.id !== id);
+      Toast.success('Cita eliminada.');
+      applyFilter();
+    });
+  }
+
+  poblarSelects();
+  render();
+</script>
+</body>
+</html>
